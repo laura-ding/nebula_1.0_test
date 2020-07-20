@@ -873,8 +873,7 @@ def get_team_name_id():
 
 def print_result(cmd, resp):
     if resp.error_code != 0:
-        print("Execute `{}' failed".format(cmd))
-        exit(-1)
+        return
     print('Cmd: {}\n'.format(cmd))
     result = ''
     if resp.rows is not None:
@@ -945,6 +944,10 @@ def execute_cmd_from_file():
 
     for cmd in cmds:
         resp = client.execute_query(cmd)
+        if resp.error_code != ttypes.ErrorCode.SUCCEEDED and resp.error_code != ttypes.ErrorCode.E_STATEMENT_EMTPY:
+            print("Execute `{}' failed, error_msg: {}\n".format(cmd, resp.error_msg))
+            continue
+
         print_result(cmd, resp)
 
 

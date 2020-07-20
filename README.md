@@ -4,7 +4,7 @@ write your nGQL in nGQL.txt file, then execute
 python3 GetTestResult.py $your_1.0_graph_ip $your_1.0_graph_port
 ```
 
-then the result will print such as
+then the succeeded result will print such as
 
 ```
 Cmd: GO FROM hash("Tim Duncan") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name  UNION ALL  GO FROM hash("Tony Parker") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name
@@ -30,5 +30,12 @@ Cmd: GO FROM hash("Tim Duncan") OVER like YIELD like._dst AS id | GO FROM $-.id 
 Result colNames: ["serve._dst"]
 
 Result data: [["Spurs"], ["Hornets"]]
+
+```
+
+the failed result
+
+```
+Execute `GO FROM hash("Tim Duncan") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name  UNION ALL  FROM hash("Tony Parker") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name ' failed: error_msg: SyntaxError: syntax error near `FROM'
 
 ```
