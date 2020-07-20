@@ -889,9 +889,9 @@ def print_result(cmd, resp):
                     exit(-1)
                 elif col.getType() == ttypes.ColumnValue.ID:
                     if col.get_id() in player_id_to_name_dict.keys():
-                        row_str = row_str + str(player_id_to_name_dict[col.get_id()]) + ', '
+                        row_str = row_str + '"' + str(player_id_to_name_dict[col.get_id()]) + '"' + ', '
                     elif col.get_id() in team_id_to_name_dict.keys():
-                        row_str = row_str + str(team_id_to_name_dict[col.get_id()]) + ', '
+                        row_str = row_str + '"' + str(team_id_to_name_dict[col.get_id()])  + '"' + ', '
                     else:
                         print('Unknown vid: {}'.format(col.get_id()))
                         exit(-1)
@@ -910,10 +910,20 @@ def print_result(cmd, resp):
                     exit(-1)
             row_str = row_str[:-2] + ']'
             result = result + row_str + ', '
-    if len(result) == 0:
-        print('Result:\n')
+
+    if resp.column_names is None:
+        print('Result colNames: \n')
     else:
-        print('Result: {}\n'.format(result[:-2] + ']'))
+        colNames = '['
+        for colName in resp.column_names:
+           colNames = colNames + '"' + colName.decode('utf-8') + '"' + ', '
+        colNames = colNames[:-2] + ']'
+        print('Result colNames: {}\n'.format(colNames))
+
+    if len(result) == 0:
+        print('Result data:\n')
+    else:
+        print('Result data: {}\n'.format(result[:-2] + ']'))
 
 
 def execute_cmd_from_file():
