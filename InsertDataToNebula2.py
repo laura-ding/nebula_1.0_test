@@ -23,16 +23,79 @@ client = None
 
 def insert_data():
     # prepare schema
-    client.execute('CREATE SPACE IF NOT EXISTS nba(partition_num=1, replica_factor=1, vid_type = fixed_string(30));'
+    resp = client.execute('CREATE SPACE IF NOT EXISTS nba(partition_num=1, replica_factor=1, vid_type = fixed_string(30));'
                    'USE nba; CREATE TAG IF NOT EXISTS player(name string, age int);'
                    'CREATE TAG IF NOT EXISTS team(name string);'
                    'CREATE EDGE IF NOT EXISTS serve(start_year int, end_year int);'
                    'CREATE EDGE IF NOT EXISTS like(likeness int);'
                    'CREATE EDGE IF NOT EXISTS teammate(start_year int, end_year int);'
-                   'CREATE TAG IF NOT EXISTS bachelor(name string, speciality string);')
+                   'CREATE TAG IF NOT EXISTS bachelor(name string, speciality string);'
+                   'CREATE TAG INDEX IF NOT EXISTS player_name_index ON player(name(64));'
+                   'CREATE TAG INDEX IF NOT EXISTS player_age_index ON player(age);')
+    
+    assert resp.error_code == 0, resp.error_msg
 
     time.sleep(10)
 
+    # insert vertex player with uuid
+    resp = client.execute('''
+                INSERT VERTEX player(name, age) VALUES 
+                "Nobody": ("Nobody",0),
+                "Amar'e Stoudemire": ("Amar'e Stoudemire",36),
+                "Russell Westbrook": ("Russell Westbrook",30),
+                "James Harden": ("James Harden",29),
+                "Kobe Bryant": ("Kobe Bryant",40),
+                "Tracy McGrady": ("Tracy McGrady",39),
+                "Chris Paul": ("Chris Paul",33),
+                "Boris Diaw": ("Boris Diaw",36),
+                "LeBron James": ("LeBron James",34),
+                "Klay Thompson": ("Klay Thompson",29),
+                "Kristaps Porzingis": ("Kristaps Porzingis",23),
+                "Jonathon Simmons": ("Jonathon Simmons",29),
+                "Marco Belinelli": ("Marco Belinelli",32),
+                "Luka Doncic": ("Luka Doncic",20),
+                "David West": ("David West",38),
+                "Tony Parker": ("Tony Parker",36),
+                "Danny Green": ("Danny Green",31),
+                "Rudy Gay": ("Rudy Gay",32),
+                "LaMarcus Aldridge": ("LaMarcus Aldridge",33),
+                "Tim Duncan": ("Tim Duncan",42),
+                "Kevin Durant": ("Kevin Durant",30),
+                "Stephen Curry": ("Stephen Curry",31),
+                "Ray Allen": ("Ray Allen",43),
+                "Tiago Splitter": ("Tiago Splitter",34),
+                "DeAndre Jordan": ("DeAndre Jordan",30),
+                "Paul Gasol": ("Paul Gasol",38),
+                "Aron Baynes": ("Aron Baynes",32),
+                "Cory Joseph": ("Cory Joseph",27),
+                "Vince Carter": ("Vince Carter",42),
+                "Marc Gasol": ("Marc Gasol",34),
+                "Ricky Rubio": ("Ricky Rubio",28),
+                "Ben Simmons": ("Ben Simmons",22),
+                "Giannis Antetokounmpo": ("Giannis Antetokounmpo",24),
+                "Rajon Rondo": ("Rajon Rondo",33),
+                "Manu Ginobili": ("Manu Ginobili",41),
+                "Kyrie Irving": ("Kyrie Irving",26),
+                "Carmelo Anthony": ("Carmelo Anthony",34),
+                "Dwyane Wade": ("Dwyane Wade",37),
+                "Joel Embiid": ("Joel Embiid",25),
+                "Damian Lillard": ("Damian Lillard",28),
+                "Yao Ming": ("Yao Ming",38),
+                "Kyle Anderson": ("Kyle Anderson",25),
+                "Dejounte Murray": ("Dejounte Murray",29),
+                "Blake Griffin": ("Blake Griffin",30),
+                "Steve Nash": ("Steve Nash",45),
+                "Jason Kidd": ("Jason Kidd",45),
+                "Dirk Nowitzki": ("Dirk Nowitzki",40),
+                "Paul George": ("Paul George",28),
+                "Grant Hill": ("Grant Hill",46),
+                "Shaquile O'Neal": ("Shaquile O'Neal",47),
+                "JaVale McGee": ("JaVale McGee",31),
+                "Dwight Howard": ("Dwight Howard",33)
+                ''')
+
+    assert resp.error_code == 0, resp.error_msg
+    
     # insert vertex team with uuid
     resp = client.execute('''
                     INSERT VERTEX team(name) VALUES "Nets": ("Nets"),
