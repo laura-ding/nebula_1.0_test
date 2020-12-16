@@ -10,7 +10,7 @@ import time
 import threading
 import traceback
 
-from graph import ttypes
+from nebula.graph import ttypes
 from nebula.ConnectionPool import ConnectionPool
 from nebula.Client import GraphClient
 from nebula.Common import *
@@ -112,75 +112,78 @@ teams = [
 
 def insert_data():
     # prepare schema
-    client.execute('CREATE SPACE IF NOT EXISTS nba(partition_num=1, replica_factor=1);'
-                   'USE nba; CREATE TAG IF NOT EXISTS player(name string, age int);'
-                   'CREATE TAG IF NOT EXISTS team(name string);'
-                   'CREATE EDGE IF NOT EXISTS serve(start_year int, end_year int);'
-                   'CREATE EDGE IF NOT EXISTS like(likeness int);'
-                   'CREATE EDGE IF NOT EXISTS teammate(start_year int, end_year int);'
-                   'CREATE TAG IF NOT EXISTS bachelor(name string, speciality string);')
+    resp = client.execute('CREATE SPACE IF NOT EXISTS nba(partition_num=1, replica_factor=1);'
+                          'USE nba; CREATE TAG IF NOT EXISTS player(name string, age int);'
+                          'CREATE TAG IF NOT EXISTS team(name string);'
+                          'CREATE EDGE IF NOT EXISTS serve(start_year int, end_year int);'
+                          'CREATE EDGE IF NOT EXISTS like(likeness int);'
+                          'CREATE EDGE IF NOT EXISTS teammate(start_year int, end_year int);'
+                          'CREATE TAG IF NOT EXISTS bachelor(name string, speciality string);')
+    assert resp.error_code == 0, resp.error_msg
 
-    time.sleep(10);
+    time.sleep(3)
 
     # insert vertex player
-    client.execute('''
-                    INSERT VERTEX player(name, age) VALUES 
-                    -835937448829988801: ("Nobody",0),
-                    -8379929135833483044: ("Amar'e Stoudemire",36),
-                    -2953535798644081749: ("Russell Westbrook",30),
-                    -7187791973189815797: ("James Harden",29),
-                    -2308681984240312228: ("Kobe Bryant",40),
-                    4823234394086728974: ("Tracy McGrady",39),
-                    -6952676908621237908: ("Chris Paul",33),
-                    -7391649757245641883: ("Boris Diaw",36),
-                    -8864869605086585744: ("LeBron James",34),
-                    -3159397121379009673: ("Klay Thompson",29),
-                    -1808363682563220400: ("Kristaps Porzingis",23),
-                    6315667670552355223: ("Jonathon Simmons",29),
-                    -8206304902611825447: ("Marco Belinelli",32),
-                    -1527627220316645914: ("Luka Doncic",20),
-                    2922505246153125262: ("David West",38),
-                    -7579316172763586624: ("Tony Parker",36),
-                    -4246510323023722591: ("Danny Green",31),
-                    -3212290852619976819: ("Rudy Gay",32),
-                    -1782445125509592239: ("LaMarcus Aldridge",33),
-                    5662213458193308137: ("Tim Duncan",42),
-                    3778194419743477824: ("Kevin Durant",30),
-                    8136836558163210487: ("Stephen Curry",31),
-                    7749522836357656167: ("Ray Allen",43),
-                    -8160811731890648949: ("Tiago Splitter",34),
-                    2357802964435032110: ("DeAndre Jordan",30),
-                    8988238998692066522: ("Paul Gasol",38),
-                    -7034133662712739796: ("Aron Baynes",32),
-                    -2020854379915135447: ("Cory Joseph",27),
-                    -6581004839648359804: ("Vince Carter",42),
-                    -2748242588091293411: ("Marc Gasol",34),
-                    8939337962333576684: ("Ricky Rubio",28),
-                    -3310404127039111439: ("Ben Simmons",22),
-                    -2500659820593255893: ("Giannis Antetokounmpo",24),
-                    -7984366606588005471: ("Rajon Rondo",33),
-                    3394245602834314645: ("Manu Ginobili",41),
-                    -7276938555819111674: ("Kyrie Irving",26),
-                    -4722009539442865199: ("Carmelo Anthony",34),
-                    -4725743394557506923: ("Dwyane Wade",37),
-                    -7419439655175297510: ("Joel Embiid",25),
-                    -8899043049306086446: ("Damian Lillard",28),
-                    4651420795228053868: ("Yao Ming",38),
-                    -8310021930715358072: ("Kyle Anderson",25),
-                    5209979940224249985: ("Dejounte Murray",29),
-                    -6761803129056739448: ("Blake Griffin",30),
-                    6663720087669302163: ("Steve Nash",45),
-                    7339407009759737412: ("Jason Kidd",45),
-                    8666973159269157201: ("Dirk Nowitzki",40),
-                    4312213929524069862: ("Paul George",28),
-                    6293765385213992205: ("Grant Hill",46),
-                    -7176373918218927568: ("Shaquile O'Neal",47),
-                    -6714656557196607176: ("JaVale McGee",31),
-                    -7291604415594599833: ("Dwight Howard",33)
-                    ''')
+    resp = client.execute('''
+                          INSERT VERTEX player(name, age) VALUES 
+                          -835937448829988801: ("Nobody",0),
+                          -8379929135833483044: ("Amar'e Stoudemire",36),
+                          -2953535798644081749: ("Russell Westbrook",30),
+                          -7187791973189815797: ("James Harden",29),
+                          -2308681984240312228: ("Kobe Bryant",40),
+                          4823234394086728974: ("Tracy McGrady",39),
+                          -6952676908621237908: ("Chris Paul",33),
+                          -7391649757245641883: ("Boris Diaw",36),
+                          -8864869605086585744: ("LeBron James",34),
+                          -3159397121379009673: ("Klay Thompson",29),
+                          -1808363682563220400: ("Kristaps Porzingis",23),
+                          6315667670552355223: ("Jonathon Simmons",29),
+                          -8206304902611825447: ("Marco Belinelli",32),
+                          -1527627220316645914: ("Luka Doncic",20),
+                          2922505246153125262: ("David West",38),
+                          -7579316172763586624: ("Tony Parker",36),
+                          -4246510323023722591: ("Danny Green",31),
+                          -3212290852619976819: ("Rudy Gay",32),
+                          -1782445125509592239: ("LaMarcus Aldridge",33),
+                          5662213458193308137: ("Tim Duncan",42),
+                          3778194419743477824: ("Kevin Durant",30),
+                          8136836558163210487: ("Stephen Curry",31),
+                          7749522836357656167: ("Ray Allen",43),
+                          -8160811731890648949: ("Tiago Splitter",34),
+                          2357802964435032110: ("DeAndre Jordan",30),
+                          8988238998692066522: ("Paul Gasol",38),
+                          -7034133662712739796: ("Aron Baynes",32),
+                          -2020854379915135447: ("Cory Joseph",27),
+                          -6581004839648359804: ("Vince Carter",42),
+                          -2748242588091293411: ("Marc Gasol",34),
+                          8939337962333576684: ("Ricky Rubio",28),
+                          -3310404127039111439: ("Ben Simmons",22),
+                          -2500659820593255893: ("Giannis Antetokounmpo",24),
+                          -7984366606588005471: ("Rajon Rondo",33),
+                          3394245602834314645: ("Manu Ginobili",41),
+                          -7276938555819111674: ("Kyrie Irving",26),
+                          -4722009539442865199: ("Carmelo Anthony",34),
+                          -4725743394557506923: ("Dwyane Wade",37),
+                          -7419439655175297510: ("Joel Embiid",25),
+                          -8899043049306086446: ("Damian Lillard",28),
+                          4651420795228053868: ("Yao Ming",38),
+                          -8310021930715358072: ("Kyle Anderson",25),
+                          5209979940224249985: ("Dejounte Murray",29),
+                          -6761803129056739448: ("Blake Griffin",30),
+                          6663720087669302163: ("Steve Nash",45),
+                          7339407009759737412: ("Jason Kidd",45),
+                          8666973159269157201: ("Dirk Nowitzki",40),
+                          4312213929524069862: ("Paul George",28),
+                          6293765385213992205: ("Grant Hill",46),
+                          -7176373918218927568: ("Shaquile O'Neal",47),
+                          -6714656557196607176: ("JaVale McGee",31),
+                          -7291604415594599833: ("Dwight Howard",33)
+                          ''')
+
+    assert resp.error_code == 0, resp.error_msg
 
     # insert vertex player with uuid
-    client.execute('''
+    resp = client.execute('''
                     INSERT VERTEX player(name, age) VALUES 
                     uuid("Nobody"): ("Nobody",0),
                     uuid("Amar'e Stoudemire"): ("Amar'e Stoudemire",36),
@@ -236,8 +239,10 @@ def insert_data():
                     uuid("Dwight Howard"): ("Dwight Howard",33)
                     ''')
 
+    assert resp.error_code == 0, resp.error_msg
+
     # insert vertex team
-    client.execute('''
+    resp = client.execute('''
                     INSERT VERTEX team(name) VALUES 
                     -2318401216565722165: ("Nets"),
                     -2742277443392542725: ("Pistons"),
@@ -270,9 +275,10 @@ def insert_data():
                     8319893554523355767: ("Trail Blazers"),
                     7276941027486377550: ("Bulls")
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert vertex team with uuid
-    client.execute('''
+    resp = client.execute('''
                     INSERT VERTEX team(name) VALUES uuid("Nets"): ("Nets"),
                     uuid("Pistons"): ("Pistons"),
                     uuid("Bucks"): ("Bucks"),
@@ -304,12 +310,14 @@ def insert_data():
                     uuid("Trail Blazers"): ("Trail Blazers"),
                     uuid("Bulls"): ("Bulls")
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
-    client.execute('INSERT VERTEX bachelor(name, speciality) '
+    resp = client.execute('INSERT VERTEX bachelor(name, speciality) '
                    'VALUES 5662213458193308137: ("Tim Duncan",psychology)')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge serve
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE serve(start_year, end_year) VALUES 
                     -8379929135833483044 -> 868103967282670864: (2002, 2010),
                     -8379929135833483044 -> -24407060583402289: (2010, 2015),
@@ -464,9 +472,10 @@ def insert_data():
                     -7291604415594599833 -> 1106406639891543428: (2017, 2018),
                     -7291604415594599833 -> 7810074228982596296: (2018, 2019);
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge serve with uuid
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE serve(start_year, end_year) VALUES 
                     uuid("Amar'e Stoudemire") -> uuid("Suns"): (2002, 2010),
                     uuid("Amar'e Stoudemire") -> uuid("Knicks"): (2010, 2015),
@@ -621,9 +630,10 @@ def insert_data():
                     uuid("Dwight Howard") -> uuid("Hornets"): (2017, 2018),
                     uuid("Dwight Howard") -> uuid("Wizards"): (2018, 2019)
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge like
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE like(likeness) VALUES 
                     -8379929135833483044 -> 6663720087669302163: (90),
                     -2953535798644081749 -> 4312213929524069862: (90),
@@ -708,9 +718,10 @@ def insert_data():
                     -7176373918218927568 -> -6714656557196607176: (100),
                     -7176373918218927568 -> 5662213458193308137: (80)
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge like with uuid
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE like(likeness) VALUES 
                     uuid("Amar'e Stoudemire") -> uuid("Steve Nash"): (90),
                     uuid("Russell Westbrook") -> uuid("Paul George"): (90),
@@ -795,9 +806,10 @@ def insert_data():
                     uuid("Shaquile O'Neal") -> uuid("JaVale McGee"): (100),
                     uuid("Shaquile O'Neal") -> uuid("Tim Duncan"): (80)
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge teammate
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE teammate(start_year, end_year) VALUES 
                     -7579316172763586624 -> 5662213458193308137: (2001, 2016),
                     -7579316172763586624 -> 3394245602834314645: (2002, 2018),
@@ -810,9 +822,10 @@ def insert_data():
                     3394245602834314645 -> 5662213458193308137: (2002, 2016),
                     3394245602834314645 -> -7579316172763586624: (2002, 2016)
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
     # insert edge teammate with uuid
-    client.execute('''
+    resp = client.execute('''
                     INSERT EDGE teammate(start_year, end_year) VALUES 
                     uuid("Tony Parker") -> uuid("Tim Duncan"): (2001, 2016),
                     uuid("Tony Parker") -> uuid("Manu Ginobili"): (2002, 2018),
@@ -825,6 +838,7 @@ def insert_data():
                     uuid("Manu Ginobili") -> uuid("Tim Duncan"): (2002, 2016),
                     uuid("Manu Ginobili") -> uuid("Tony Parker"): (2002, 2016)
                     ''')
+    assert resp.error_code == 0, resp.error_msg
 
 
 def get_player_name_id():
@@ -871,7 +885,7 @@ def get_team_name_id():
         team_id_to_name_dict[vid] = team
 
 
-def print_result(cmd, resp):
+def print_result(cmd, resp, int_id=False):
     if resp.error_code != 0:
         return
     print('Cmd: {}\n'.format(cmd))
@@ -887,13 +901,16 @@ def print_result(cmd, resp):
                     print('ERROR: type is empty')
                     exit(-1)
                 elif col.getType() == ttypes.ColumnValue.ID:
-                    if col.get_id() in player_id_to_name_dict.keys():
-                        row_str = row_str + '"' + str(player_id_to_name_dict[col.get_id()]) + '"' + ', '
-                    elif col.get_id() in team_id_to_name_dict.keys():
-                        row_str = row_str + '"' + str(team_id_to_name_dict[col.get_id()])  + '"' + ', '
+                    if int_id:
+                        row_str = row_str + str(col.get_id()) + ', '
                     else:
-                        print('Unknown vid: {}'.format(col.get_id()))
-                        exit(-1)
+                        if col.get_id() in player_id_to_name_dict.keys():
+                            row_str = row_str + '"' + str(player_id_to_name_dict[col.get_id()]) + '"' + ', '
+                        elif col.get_id() in team_id_to_name_dict.keys():
+                            row_str = row_str + '"' + str(team_id_to_name_dict[col.get_id()])  + '"' + ', '
+                        else:
+                            print('Unknown vid: {}'.format(col.get_id()))
+                            exit(-1)
                 elif col.getType() == ttypes.ColumnValue.BOOL_VAL:
                     row_str = row_str + str(col.get_bool_val()) + ', '
                 elif col.getType() == ttypes.ColumnValue.INTEGER:
@@ -925,7 +942,7 @@ def print_result(cmd, resp):
         print('Result data: {}\n'.format(result[:-2] + ']'))
 
 
-def execute_cmd_from_file():
+def execute_cmd_from_file(int_id=False):
     client.execute('USE nba;')
     cmds_file = open('./nGQL.txt', 'r')
     cmd = ''
@@ -948,7 +965,7 @@ def execute_cmd_from_file():
             print("Execute `{}' failed, error_msg: {}\n".format(cmd, resp.error_msg))
             continue
 
-        print_result(cmd, resp)
+        print_result(cmd, resp, int_id)
 
 
 if __name__ == '__main__':
@@ -976,7 +993,7 @@ if __name__ == '__main__':
         insert_data()
         get_player_name_id()
         get_team_name_id()
-        execute_cmd_from_file()
+        execute_cmd_from_file(True)
         # close connect pool
         connection_pool.close()
 
