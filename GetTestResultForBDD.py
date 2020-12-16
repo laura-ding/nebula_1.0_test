@@ -891,7 +891,6 @@ def print_result(cmd, resp, int_id=False):
     print('Cmd: {}\n'.format(cmd))
     result = ''
     if resp.rows is not None:
-        result = '['
         for row in resp.rows:
             if len(row.columns) == 0:
                 continue
@@ -937,7 +936,7 @@ def print_result(cmd, resp, int_id=False):
     if len(result) == 0:
         print('\n')
     else:
-        print('{}\n'.format(result[:-2] + ']'))
+        print('{}\n'.format(result[:-2]))
 
 
 def execute_cmd_from_file(int_id=False):
