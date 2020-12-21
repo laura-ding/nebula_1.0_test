@@ -885,7 +885,7 @@ def get_team_name_id():
         team_id_to_name_dict[vid] = team
 
 
-def print_result(cmd, resp, int_id=False):
+def print_result(cmd, resp, use_hash=True):
     if resp.error_code != 0:
         return
     print('Cmd: {}\n'.format(cmd))
@@ -900,13 +900,13 @@ def print_result(cmd, resp, int_id=False):
                     print('ERROR: type is empty')
                     exit(-1)
                 elif col.getType() == ttypes.ColumnValue.ID:
-                    if int_id:
+                    if not use_hash:
                         row_str = row_str + str(col.get_id()) + ', '
                     else:
                         if col.get_id() in player_id_to_name_dict.keys():
-                            row_str = row_str + '"' + str(player_id_to_name_dict[col.get_id()]) + '"' + '| '
+                            row_str = row_str + 'hash("%s")|' % (str(player_id_to_name_dict[col.get_id()]))
                         elif col.get_id() in team_id_to_name_dict.keys():
-                            row_str = row_str + '"' + str(team_id_to_name_dict[col.get_id()]) + '"' + '| '
+                            row_str = row_str + 'hash("%s")|' % (str(team_id_to_name_dict[col.get_id()]))
                         else:
                             print('Unknown vid: {}'.format(col.get_id()))
                             exit(-1)
@@ -923,7 +923,6 @@ def print_result(cmd, resp, int_id=False):
                 else:
                     print('ERROR: Type unsupported')
                     exit(-1)
-            row_str = row_str[:-2] + '|'
             result = result + row_str + '\n'
 
     if resp.column_names is not None:
@@ -936,7 +935,7 @@ def print_result(cmd, resp, int_id=False):
     if len(result) == 0:
         print('\n')
     else:
-        print('{}\n'.format(result[:-2]))
+        print('{}\n'.format(result))
 
 
 def execute_cmd_from_file(int_id=False):

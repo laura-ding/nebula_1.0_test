@@ -1,7 +1,7 @@
 --BEGIN--
-GO FROM hash("Tim Duncan") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name
+GO FROM hash("Tim Duncan") OVER serve YIELD $^.player.name, serve._dst, $$.team.name
  UNION ALL
- GO FROM hash("Tony Parker") OVER serve YIELD $^.player.name, serve.start_year, $$.team.name
+ GO FROM hash("Tony Parker") OVER serve YIELD $^.player.name, serve._dst, $$.team.name
 --END--
 
 --BEGIN--
